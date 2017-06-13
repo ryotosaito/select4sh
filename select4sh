@@ -54,11 +54,11 @@ shift $((OPTIND - 1))
 		case "$key" in
 			$'\x1b\x5b\x41' ) # up key
 				if [[ $i -gt 1 ]]; then
-					i=$(echo $i - 1 | bc)
+					i=$((i-1))
 				fi;;
 			$'\x1b\x5b\x42' ) # down key
-				if [[ $i -lt $(expr $#) ]]; then
-					i=$(echo $i + 1 | bc)
+				if [[ $i -lt $(($#)) ]]; then
+					i=$((i+1))
 				fi;;
 			"" ) # enter key
 				echo
@@ -72,5 +72,5 @@ shift $((OPTIND - 1))
 		fi
 		echo "${@:i:1}"
 	fi
-}>$tty
+}>"$tty"
 echo "${@:i:1}" #return
