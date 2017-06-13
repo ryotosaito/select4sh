@@ -8,6 +8,7 @@
 function help() {
 	(
 		echo "Options:"
+		echo "  -p prompt^set prompt before options"
 		echo "  -q^don't echo selected value"
 	) | column -t -s ^
 	exit;
@@ -20,10 +21,13 @@ i=1;
 ####################################
 ##### Get Option ###################
 ####################################
-while getopts hq OPT
+while getopts hp:q OPT
 do
 	case $OPT in
 		h)  help
+			;;
+		p)  FLAG_P=1
+			VALUE_P=$OPTARG
 			;;
 		q)  FLAG_Q=1
 			;;
@@ -38,6 +42,9 @@ shift $((OPTIND - 1))
 	while :
 	do
 		echo -ne "\033[G\033[1M"
+		if [[ ${FLAG_P-} ]]; then
+			echo -ne "${VALUE_P-}"
+		fi
 		echo -ne "\033[30;47m${@:i:1}\033[m"
 		read -rsn1 key
 		if [[ "$key" == $'\x1b' ]]; then
@@ -60,6 +67,9 @@ shift $((OPTIND - 1))
 	done
 	echo -ne "\033[F\033[1M"
 	if [[ ! ${FLAG_Q-} ]]; then
+		if [[ ${FLAG_P-} ]]; then
+			echo -ne "${VALUE_P-}"
+		fi
 		echo "${@:i:1}"
 	fi
 }>$tty
