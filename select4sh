@@ -5,13 +5,36 @@
 # This software is released under the MIT License.
 # http://opensource.org/licenses/mit-license.php
 
+function help() {
+	(
+		echo "Options:"
+		echo "  -q^don't echo selected value"
+	) | column -t -s ^
+	exit;
+}
+
 set -Ceu
 tty=$(tty)
 i=1;
+
+####################################
+##### Get Option ###################
+####################################
+while getopts hq OPT
+do
+	case $OPT in
+		h)  help
+			;;
+		q)  FLAG_Q=1
+			;;
+	esac
+done
+shift $((OPTIND - 1))
+
 ####################################
 ##### Main #########################
 ####################################
-(
+{
 	while :
 	do
 		echo -ne "\033[G\033[1M"
@@ -36,6 +59,8 @@ i=1;
 		esac
 	done
 	echo -ne "\033[F\033[1M"
-	echo "${@:i:1}"
-)>$tty
+	if [[ ! ${FLAG_Q-} ]]; then
+		echo "${@:i:1}"
+	fi
+}>$tty
 echo "${@:i:1}" #return
