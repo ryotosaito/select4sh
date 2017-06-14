@@ -18,7 +18,8 @@ function help() {
 
 set -Ceu
 tty=$(tty)
-i=1;
+i=1
+finished=0
 
 ####################################
 ##### Get Option ###################
@@ -44,20 +45,9 @@ shift $((OPTIND - 1))
 ####################################
 ##### Main #########################
 ####################################
-if [[ ${FLAG_A-} ]]; then
-	for j in $(seq 1 5)
-	do
-		echo
-	done
-fi>"$tty"
 {
 	while :
 	do
-		if [[ ${FLAG_A-} ]]; then
-			echo -ne "\033[$#F\033[$#M"
-		else
-			echo -ne "\033[G\033[1M"
-		fi
 		if [[ ${FLAG_P-} ]]; then
 			echo -ne "${VALUE_P-}"
 		fi
@@ -87,11 +77,17 @@ fi>"$tty"
 					i=$((i+1))
 				fi;;
 			"" ) # enter key
-				echo
-				break;;
+				finished=1;;
 		esac
+		if [[ ${FLAG_A-} ]]; then
+			echo -ne "\033[$#F\033[$#M"
+		else
+			echo -ne "\033[G\033[1M"
+		fi
+		if [[ $finished -eq 1 ]]; then
+			break
+		fi
 	done
-	echo -ne "\033[F\033[1M"
 	if [[ ! ${FLAG_Q-} ]]; then
 		if [[ ${FLAG_P-} ]]; then
 			echo -ne "${VALUE_P-}"
@@ -103,7 +99,7 @@ fi>"$tty"
 ##### Return #######################
 ####################################
 if [[ ${FLAG_K-} ]]; then
-	echo "$i-1"
+	echo $((i-1))
 else
 	echo "${@:i:1}"
 fi
