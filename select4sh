@@ -8,6 +8,7 @@
 function help() {
 	(
 		echo "Options:"
+		echo "  -a^display all elements at once"
 		echo "  -k^output key instead of value"
 		echo "  -p prompt^set prompt before options"
 		echo "  -q^don't echo selected value"
@@ -22,9 +23,11 @@ i=1;
 ####################################
 ##### Get Option ###################
 ####################################
-while getopts hkp:q OPT
+while getopts ahkp:q OPT
 do
 	case $OPT in
+		a)  FLAG_A=1
+			;;
 		h)  help
 			;;
 		k)	FLAG_K=1
@@ -41,14 +44,34 @@ shift $((OPTIND - 1))
 ####################################
 ##### Main #########################
 ####################################
+if [[ ${FLAG_A-} ]]; then
+	for j in $(seq 1 5)
+	do
+		echo
+	done
+fi>"$tty"
 {
 	while :
 	do
-		echo -ne "\033[G\033[1M"
+		if [[ ${FLAG_A-} ]]; then
+			echo -ne "\033[$#F\033[$#M"
+		else
+			echo -ne "\033[G\033[1M"
+		fi
 		if [[ ${FLAG_P-} ]]; then
 			echo -ne "${VALUE_P-}"
 		fi
-		echo -ne "\033[30;47m${@:i:1}\033[m"
+		if [[ ${FLAG_A-} ]]; then
+			for j in $(seq 1 $#)
+			do
+				if [[ $i -eq $j ]]; then
+					echo -ne "\033[30;47m"
+				fi
+				echo -e "${@:j:1}\033[m"
+			done
+		else
+			echo -ne "\033[30;47m${@:i:1}\033[m"
+		fi
 		read -rsn1 key
 		if [[ "$key" == $'\x1b' ]]; then
 			read -rsn2 rest
