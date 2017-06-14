@@ -8,6 +8,7 @@
 function help() {
 	(
 		echo "Options:"
+		echo "  -k^output key instead of value"
 		echo "  -p prompt^set prompt before options"
 		echo "  -q^don't echo selected value"
 	) | column -t -s ^
@@ -21,10 +22,12 @@ i=1;
 ####################################
 ##### Get Option ###################
 ####################################
-while getopts hp:q OPT
+while getopts hkp:q OPT
 do
 	case $OPT in
 		h)  help
+			;;
+		k)	FLAG_K=1
 			;;
 		p)  FLAG_P=1
 			VALUE_P=$OPTARG
@@ -73,4 +76,11 @@ shift $((OPTIND - 1))
 		echo "${@:i:1}"
 	fi
 }>"$tty"
-echo "${@:i:1}" #return
+####################################
+##### Return #######################
+####################################
+if [[ ${FLAG_K-} ]]; then
+	echo "$i-1"
+else
+	echo "${@:i:1}"
+fi
