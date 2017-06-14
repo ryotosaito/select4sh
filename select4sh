@@ -18,6 +18,7 @@ function help() {
 set -Ceu
 tty=$(tty)
 i=1
+finished=0
 
 ####################################
 ##### Get Option ###################
@@ -44,7 +45,6 @@ shift $((OPTIND - 1))
 {
 	while :
 	do
-		echo -ne "\033[G\033[1M"
 		if [[ ${FLAG_P-} ]]; then
 			echo -ne "${VALUE_P-}"
 		fi
@@ -64,11 +64,13 @@ shift $((OPTIND - 1))
 					i=$((i+1))
 				fi;;
 			"" ) # enter key
-				echo
-				break;;
+				finished=1;;
 		esac
+		echo -ne "\033[G\033[1M"
+		if [[ $finished -eq 1 ]]; then
+			break
+		fi
 	done
-	echo -ne "\033[F\033[1M"
 	if [[ ! ${FLAG_Q-} ]]; then
 		if [[ ${FLAG_P-} ]]; then
 			echo -ne "${VALUE_P-}"
