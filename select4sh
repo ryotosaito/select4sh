@@ -82,7 +82,7 @@ shift $((OPTIND - 1))
 			"" ) # enter key
 				finished=1;;
 		esac
-		if [[ ${FLAG_A-} ]] && [[ $finished -ne 1 ]]; then
+		if [[ ${FLAG_A-} ]] && ([[ $finished -ne 1 ]] || [[ ${FLAG_Q-} ]]); then
 			echo -ne "\033[$#F\033[$#M"
 		else
 			echo -ne "\033[G\033[1M"
@@ -91,6 +91,9 @@ shift $((OPTIND - 1))
 			break
 		fi
 	done
+	if [[ ${FLAG_Q-} ]] && [[ ${FLAG_A-} ]] && [[ ${FLAG_P-} ]]; then
+		echo -ne "\033[F\033[1M"
+	fi
 	if [[ ! ${FLAG_Q-} ]] && [[ ! ${FLAG_A-} ]]; then
 		if [[ ${FLAG_P-} ]]; then
 			echo -ne "${VALUE_P-}"
