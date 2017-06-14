@@ -46,10 +46,13 @@ shift $((OPTIND - 1))
 ##### Main #########################
 ####################################
 {
+	if  [[ ${FLAG_P-} ]] && [[ ${FLAG_A-} ]]; then
+		echo "${VALUE_P-}"
+	fi
 	while :
 	do
-		if [[ ${FLAG_P-} ]]; then
-			echo -ne "${VALUE_P-}"
+		if [[ ${FLAG_P-} ]] && [[ ! ${FLAG_A-} ]]; then
+			echo -n "${VALUE_P-}"
 		fi
 		if [[ ${FLAG_A-} ]]; then
 			for j in $(seq 1 $#)
