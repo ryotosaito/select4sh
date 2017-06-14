@@ -19,6 +19,15 @@ array=(a b c)
 selected=$(select4sh ${array[@]})
 #Argument is available even if it is an array
 ```
+```bash
+selected=$(select4sh -a a b c d e)
+#Then all options appear.
+a #Only the active option is highlighted.
+b
+c
+d
+e
+```
 
 ## License
 MIT
