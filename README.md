@@ -5,19 +5,19 @@ select4sh - element selection for shell
 
 ## Usage
 ```bash
-array=(a b c)
-selected=$(select4sh $array)
+selected=$(select4sh a b c d e)
 #Then you choose an element with arrow keys(up/down) and return key.
 echo $selected
 ```
 ```bash
-selected=$(select4sh -p "Select:" $array)
+selected=$(select4sh -p "Select:" a b c d e)
 #Then a prompt appears before options.
 Select:a
 ```
 ```bash
-selected=$(select4sh a b c d e)
-#Argument is available even if it is not an array
+array=(a b c)
+selected=$(select4sh ${array[@]})
+#Argument is available even if it is an array
 ```
 
 ## License
