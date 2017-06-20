@@ -31,7 +31,7 @@ do
 			;;
 		h)  help
 			;;
-		k)	FLAG_K=1
+		k)  FLAG_K=1
 			;;
 		p)  FLAG_P=1
 			VALUE_P=$OPTARG
